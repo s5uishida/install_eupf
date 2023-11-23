@@ -211,9 +211,7 @@ heartbeat_retries: 3
 heartbeat_interval: 5
 heartbeat_timeout: 5
 logging_level: info
-feature_ueip: false
 feature_ftup: true
-ip_pool:
 teid_pool: 65536
 ```
 
