@@ -43,7 +43,7 @@ The built simulation environment is as follows.
 <img src="./images/network-overview.png" title="./images/network-overview.png" width=800px></img>
 
 The eBPF/XDP UPF used is as follows.
-- eBPF/XDP UPF - eUPF `120-upf-ftup-fteid` branch (2023.11.22) - https://github.com/edgecomllc/eupf
+- eBPF/XDP UPF - eUPF `120-upf-ftup-fteid` branch (2023.11.24) - https://github.com/edgecomllc/eupf
 
 Each VMs are as follows.  
 | VM | SW & Role | IP address | OS | CPU<br>(Min) | Memory<br>(Min) | HDD<br>(Min) |
@@ -100,7 +100,7 @@ In this case, directly edit the vbox file as follows and register the remaining 
 ## Build eUPF on VM-UP
 
 Please refer to the following for building eUPF.
-- eUPF `120-upf-ftup-fteid` branch (2023.11.22) - https://github.com/edgecomllc/eupf
+- eUPF `120-upf-ftup-fteid` branch (2023.11.24) - https://github.com/edgecomllc/eupf
 
 <a id="install_packages"></a>
 
@@ -172,7 +172,7 @@ In that case, to see debug log from eBPF programs:
 ## Setup eUPF on VM-UP
 
 Please refer to the following for setup eUPF.
-- eUPF `120-upf-ftup-fteid` branch (2023.11.22) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
+- eUPF `120-upf-ftup-fteid` branch (2023.11.24) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
 
 First, uncomment the next line in the `/etc/sysctl.conf` file and reflect it in the OS.
 ```
@@ -203,6 +203,8 @@ pfcp_address: 192.168.14.151:8805
 pfcp_node_id: 192.168.14.151
 metrics_address: :9090
 n3_address: 192.168.13.151
+gtp_peer:
+echo_interval: 10
 qer_map_size: 1024
 far_map_size: 1024
 pdr_map_size: 1024
@@ -222,11 +224,11 @@ teid_pool: 65536
 ```
 # cd /root/eupf
 # bin/eupf --config config.yml
-2023/11/22 19:47:15 Get raw config: map[api_address::8080 far_map_size:1024 feature_ftup:true feature_ueip:false heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[enp0s9 enp0s16] ip_pool: logging_level:info metrics_address::9090 n3_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 qer_map_size:1024 resize_ebpf_maps:false teid_pool:65536 xdp_attach_mode:generic]
-2023/11/22 19:47:15 Apply eUPF config: {InterfaceName:[enp0s9 enp0s16] XDPAttachMode:generic ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 MetricsAddress::9090 N3Address:192.168.13.151 QerMapSize:1024 FarMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info IPPool: FTEIDPool:65536 FeatureUEIP:false FeatureFTUP:true}
-2023/11/22 19:47:16 INF Attached XDP program to iface "enp0s9" (index 4)
-2023/11/22 19:47:16 INF Attached XDP program to iface "enp0s16" (index 6)
-2023/11/22 19:47:16 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151 and N3 address: 192.168.13.151
+2023/11/24 22:11:44 Get raw config: map[api_address::8080 echo_interval:10 far_map_size:1024 feature_ftup:true gtp_peer:[] heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[enp0s9 enp0s16] logging_level:info metrics_address::9090 n3_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 qer_map_size:1024 resize_ebpf_maps:false teid_pool:65536 xdp_attach_mode:generic]
+2023/11/24 22:11:44 Apply eUPF config: {InterfaceName:[enp0s9 enp0s16] XDPAttachMode:generic ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 MetricsAddress::9090 N3Address:192.168.13.151 GtpPeer:[] EchoInterval:10 QerMapSize:1024 FarMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info FTEIDPool:65536 FeatureFTUP:true}
+2023/11/24 22:11:44 INF Attached XDP program to iface "enp0s9" (index 4)
+2023/11/24 22:11:44 INF Attached XDP program to iface "enp0s16" (index 6)
+2023/11/24 22:11:44 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151 and N3 address: 192.168.13.151
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -257,8 +259,8 @@ teid_pool: 65536
  - using code:  gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] GET    /metrics                  --> github.com/edgecomllc/eupf/cmd/api/rest.(*ApiHandler).InitMetricsRoute.func1.1 (4 handlers)
-2023/11/22 19:47:16 INF running on :9090
-2023/11/22 19:47:16 INF running on :8080
+2023/11/24 22:11:44 INF running on :8080
+2023/11/24 22:11:44 INF running on :9090
 ```
 
 <a id="setup_dn"></a>
@@ -306,5 +308,5 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
-- [2023.11.22] Updated to `120-upf-ftup-fteid` branch that supports FTUP.
+- [2023.11.24] Updated to `120-upf-ftup-fteid` branch that supports FTUP.
 - [2023.10.29] Initial release.
