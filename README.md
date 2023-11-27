@@ -64,7 +64,6 @@ The network interfaces of each VM are as follows.
 | | enp0s9 | NAT Network | 192.168.16.152/24 | N6, ***default GW for VM-UP*** | -- |
 
 NAT networks of Virtualbox  are as follows.
-**Please configure a network adapter with a driver (e.g. e1000) that supports XDP.**
 | Network Name | Network CIDR |
 | --- | --- |
 | N3 | 192.168.13.0/24 |
@@ -216,6 +215,9 @@ logging_level: info
 feature_ftup: true
 teid_pool: 65536
 ```
+If `xdp_attach_mode` is `generic`(Kernel-level implementation), the performance will not be improved.
+`native`(Driver-level implementation) or `offload`(NIC-level implementation) will be better.
+For reference, a list of drivers that support XDP can be found [here](https://github.com/iovisor/bcc/blob/master/docs/kernel-versions.md#xdp).
 
 <a id="run"></a>
 
