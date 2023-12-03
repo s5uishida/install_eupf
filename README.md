@@ -5,6 +5,10 @@ There are installation instructions in the eUPF repository, but I would like to 
 
 ---
 
+### [Sample Configurations and Miscellaneous for Mobile Network](https://github.com/s5uishida/sample_config_misc_for_mobile_network)
+
+---
+
 <a id="toc"></a>
 
 ## Table of Contents
