@@ -47,7 +47,7 @@ The built simulation environment is as follows.
 <img src="./images/network-overview.png" title="./images/network-overview.png" width=800px></img>
 
 The eBPF/XDP UPF used is as follows.
-- eBPF/XDP UPF - eUPF v0.5.2 (2023.12.04) - https://github.com/edgecomllc/eupf
+- eBPF/XDP UPF - eUPF v0.6.0 (2023.12.04) - https://github.com/edgecomllc/eupf
 
 Each VMs are as follows.  
 | VM | SW & Role | IP address | OS | CPU<br>(Min) | Memory<br>(Min) | HDD<br>(Min) |
@@ -103,7 +103,7 @@ In this case, directly edit the vbox file as follows and register the remaining 
 ## Build eUPF on VM-UP
 
 Please refer to the following for building eUPF.
-- eUPF v0.5.2 (2023.12.04) - https://github.com/edgecomllc/eupf
+- eUPF v0.6.0 (2023.12.04) - https://github.com/edgecomllc/eupf
 
 <a id="install_packages"></a>
 
@@ -174,7 +174,7 @@ In that case, to see debug log from eBPF programs:
 ## Setup eUPF on VM-UP
 
 Please refer to the following for setup eUPF.
-- eUPF v0.5.2 (2023.12.04) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
+- eUPF v0.6.0 (2023.12.04) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
 
 First, uncomment the next line in the `/etc/sysctl.conf` file and reflect it in the OS.
 ```
@@ -313,6 +313,7 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
+- [2023.12.05] The version confirmed to work in the changelog of 2023.12.04 has been tagged as `v0.6.0`.
 - [2023.12.04] Updated as FTUP feature has been merged into `main` branch.
 - [2023.11.24] Updated to `120-upf-ftup-fteid` branch that supports FTUP.
 - [2023.10.29] Initial release.
