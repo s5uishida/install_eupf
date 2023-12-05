@@ -313,7 +313,7 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
-- [2023.12.05] The version confirmed to work in the changelog of 2023.12.04 has been tagged as `v0.6.0`.
+- [2023.12.05] The version confirmed to work in the changelog on 2023.12.04 has been tagged as `v0.6.0`.
 - [2023.12.04] Updated as FTUP feature has been merged into `main` branch.
 - [2023.11.24] Updated to `120-upf-ftup-fteid` branch that supports FTUP.
 - [2023.10.29] Initial release.
