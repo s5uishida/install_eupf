@@ -52,8 +52,8 @@ The eBPF/XDP UPF used is as follows.
 Each VMs are as follows.  
 | VM | SW & Role | IP address | OS | CPU<br>(Min) | Memory<br>(Min) | HDD<br>(Min) |
 | --- | --- | --- | --- | --- | --- | --- |
-| VM-UP | eUPF U-Plane | 192.168.0.151/24 | Ubuntu 22.04 | 1 | 2GB | 20GB |
-| VM-DN | Data Network Gateway  | 192.168.0.152/24 | Ubuntu 22.04 | 1 | 1GB | 10GB |
+| VM-UP | eUPF U-Plane | 192.168.0.151/24 | Ubuntu 24.04 | 1 | 2GB | 20GB |
+| VM-DN | Data Network Gateway  | 192.168.0.152/24 | Ubuntu 24.04 | 1 | 1GB | 10GB |
 
 The network interfaces of each VM are as follows.
 | VM | Device | Network Adapter | IP address | Interface | XDP |
@@ -231,12 +231,12 @@ For reference, a list of drivers that support XDP can be found [here](https://gi
 ```
 # cd /root/eupf
 # bin/eupf --config config.yml
-2024/05/04 21:56:08 Startup config: map[api_address::8080 echo_interval:10 far_map_size:1024 feature_ftup:true feature_ueip:true gtp_peer:[] heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[enp0s9 enp0s16] logging_level:info metrics_address::9090 n3_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 qer_map_size:1024 resize_ebpf_maps:false teid_pool:65536 ueip_pool:10.45.0.0/16 xdp_attach_mode:generic]
-2024/05/04 21:56:08 Apply eUPF config: {InterfaceName:[enp0s9 enp0s16] XDPAttachMode:generic ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 MetricsAddress::9090 N3Address:192.168.13.151 GtpPeer:[] EchoInterval:10 QerMapSize:1024 FarMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info UEIPPool:10.45.0.0/16 FTEIDPool:65536 FeatureUEIP:true FeatureFTUP:true}
-2024/05/04 21:56:08 INF Attached XDP program to iface "enp0s9" (index 2)
-2024/05/04 21:56:08 INF Attached XDP program to iface "enp0s16" (index 4)
-2024/05/04 21:56:08 INF Initialize resources: UEIP pool (CIDR: "10.45.0.0/16"), TEID pool (size: 65536)
-2024/05/04 21:56:08 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151 and N3 address: 192.168.13.151
+2024/05/12 03:46:29 Startup config: map[api_address::8080 echo_interval:10 far_map_size:1024 feature_ftup:true feature_ueip:true gtp_peer:[] heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[enp0s9 enp0s16] logging_level:info metrics_address::9090 n3_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 qer_map_size:1024 resize_ebpf_maps:false teid_pool:65536 ueip_pool:10.45.0.0/16 xdp_attach_mode:generic]
+2024/05/12 03:46:29 Apply eUPF config: {InterfaceName:[enp0s9 enp0s16] XDPAttachMode:generic ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 MetricsAddress::9090 N3Address:192.168.13.151 GtpPeer:[] EchoInterval:10 QerMapSize:1024 FarMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info UEIPPool:10.45.0.0/16 FTEIDPool:65536 FeatureUEIP:true FeatureFTUP:true}
+2024/05/12 03:46:29 INF Attached XDP program to iface "enp0s9" (index 2)
+2024/05/12 03:46:29 INF Attached XDP program to iface "enp0s16" (index 4)
+2024/05/12 03:46:29 INF Initialize resources: UEIP pool (CIDR: "10.45.0.0/16"), TEID pool (size: 65536)
+2024/05/12 03:46:29 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151 and N3 address: 192.168.13.151
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -266,8 +266,8 @@ For reference, a list of drivers that support XDP can be found [here](https://gi
  - using code:  gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] GET    /metrics                  --> github.com/edgecomllc/eupf/cmd/api/rest.(*ApiHandler).InitMetricsRoute.(*ApiHandler).InitMetricsRoute.func1.func2 (4 handlers)
-2024/05/04 21:56:08 INF running on :8080
-2024/05/04 21:56:08 INF running on :9090
+2024/05/12 03:46:29 INF running on :8080
+2024/05/12 03:46:29 INF running on :9090
 ```
 
 <a id="setup_dn"></a>
@@ -315,6 +315,7 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
+- [2024.05.11] Changed the eUPF OS from Ubuntu 22.04 to 24.04.
 - [2024.05.04] Updated to `v0.6.4`.
 - [2024.02.11] Updated to `v0.6.1`.
 - [2023.12.05] The version confirmed to work in the changelog on 2023.12.04 has been tagged as `v0.6.0`.
