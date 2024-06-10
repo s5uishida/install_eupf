@@ -269,6 +269,19 @@ For reference, a list of drivers that support XDP can be found [here](https://gi
 2024/05/17 23:43:50 INF running on :8080
 2024/05/17 23:43:50 INF running on :9090
 ```
+The link status of the network interfaces N3(enp0s9) and N6(enp0s16) is as follows.
+```
+# ip link show
+...
+2: enp0s9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdpgeneric qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 08:00:27:f8:d7:49 brd ff:ff:ff:ff:ff:ff
+    prog/xdp id 21 name upf_ip_entrypoi tag a9e9af5ef91160de jited 
+...
+4: enp0s16: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdpgeneric qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 08:00:27:0e:da:7c brd ff:ff:ff:ff:ff:ff
+    prog/xdp id 21 name upf_ip_entrypoi tag a9e9af5ef91160de jited 
+...
+```
 
 <a id="setup_dn"></a>
 
