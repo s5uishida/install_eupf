@@ -37,7 +37,7 @@ There are installation instructions in the eUPF repository, but I would like to 
 ## Simple Overview of eUPF and Data Network Gateway
 
 This describes a simple configuration of eUPF and Data Network Gateway, focusing on U-Plane.
-**Note that this configuration is implemented with Virtualbox VMs.**
+**Note that this configuration is implemented with Proxmox VE VMs.**
 
 The following minimum configuration was set as a condition.
 - One UPF and Data Network Gateway
@@ -47,7 +47,7 @@ The built simulation environment is as follows.
 <img src="./images/network-overview.png" title="./images/network-overview.png" width=800px></img>
 
 The eBPF/XDP UPF used is as follows.
-- eBPF/XDP UPF - eUPF v0.6.4 (2024.05.03) - https://github.com/edgecomllc/eupf
+- eBPF/XDP UPF - eUPF v0.6.4 (2024.09.22) - https://github.com/edgecomllc/eupf
 
 Each VMs are as follows.  
 | VM | SW & Role | IP address | OS | CPU<br>(Min) | Memory<br>(Min) | HDD<br>(Min) |
@@ -56,54 +56,32 @@ Each VMs are as follows.
 | VM-DN | Data Network Gateway  | 192.168.0.152/24 | Ubuntu 24.04 | 1 | 1GB | 10GB |
 
 The network interfaces of each VM are as follows.
-| VM | Device | Network Adapter | IP address | Interface | XDP |
-| --- | --- | --- | --- | --- | --- |
-| VM-UP | ~~enp0s3~~ | ~~NAT(default)~~ | ~~10.0.2.15/24~~ | ~~(VM default NW)~~ ***down*** | -- |
-| | enp0s8 | Bridged Adapter | 192.168.0.151/24 | (Mgmt NW) | -- |
-| | enp0s9 | NAT Network | 192.168.13.151/24 | N3 | x |
-| | enp0s10 | NAT Network | 192.168.14.151/24 | N4 | -- |
-| | enp0s16 | NAT Network | 192.168.16.151/24 | N6 | x |
-| VM-DN | enp0s3 | NAT(default) | 10.0.2.15/24 | (VM default NW) | -- |
-| | enp0s8 | Bridged Adapter | 192.168.0.152/24 | (Mgmt NW) | -- |
-| | enp0s9 | NAT Network | 192.168.16.152/24 | N6, ***default GW for VM-UP*** | -- |
+| VM | Device | Model | Linux Bridge | IP address | Interface | XDP |
+| --- | --- | --- | --- | --- | --- | --- |
+| VM-UP | ~~ens18~~ | ~~VirtIO~~ | ~~vmbr1~~ | ~~10.0.0.151/24~~ | ~~(NAPT NW)~~ ***down*** | -- |
+| | ens19 | VirtIO | mgbr0 | 192.168.0.151/24 | (Mgmt NW) | -- |
+| | ens20 | VirtIO | vmbr3 | 192.168.13.151/24 | N3 | x |
+| | ens21 | VirtIO | vmbr4 | 192.168.14.151/24 | N4 | -- |
+| | ens22 | VirtIO | vmbr6 | 192.168.16.151/24 | N6 | x |
+| VM-DN | ens18 | VirtIO | vmbr1 | 10.0.0.152/24 | (NAPT NW) | -- |
+| | ens19 | VirtIO | mgbr0 | 192.168.0.152/24 | (Mgmt NW) | -- |
+| | ens20 | VirtIO | vmbr6 | 192.168.16.152/24 | N6 ***(default GW for VM-UP)*** | -- |
 
-NAT networks of Virtualbox  are as follows.
-| Network Name | Network CIDR |
-| --- | --- |
-| N3 | 192.168.13.0/24 |
-| N4 | 192.168.14.0/24 |
-| N6 | 192.168.16.0/24 |
-
-**Note. Virtualbox GUI tool can only register up to 4 Network Adapters in one VM.
-Since 5 Network Adapters are registered in VM-UP, one cannot be registered with the GUI tool.
-In this case, directly edit the vbox file as follows and register the remaining Network Adapter.**
-
-**For example)**
-```diff
---- eupf10.vbox.orig    2023-10-28 21:23:38.808738418 +0900
-+++ eupf10.vbox 2023-10-29 06:41:01.157520495 +0900
-@@ -68,7 +68,12 @@
-           </DisabledModes>
-           <NATNetwork name="N4"/>
-         </Adapter>
--        <Adapter slot="8" MACAddress="080027FE0AA2" cable="false"/>
-+        <Adapter slot="8" enabled="true" MACAddress="080027FE0AA2" type="82540EM">
-+          <DisabledModes>
-+            <InternalNetwork name="intnet"/>
-+          </DisabledModes>
-+          <NATNetwork name="N6"/>
-+        </Adapter>
-         <Adapter slot="9" MACAddress="080027990637" cable="false"/>
-         <Adapter slot="10" MACAddress="080027AC33FC" cable="false"/>
-         <Adapter slot="11" MACAddress="08002748BC3D" cable="false"/>
-```
+Linux Bridges of Proxmox VE are as follows.
+| Linux Bridge | Network CIDR | Interface |
+| --- | --- | --- |
+| vmbr1 | 10.0.0.0/24 | NAPT NW |
+| mgbr0 | 192.168.0.0/24 | Mgmt NW |
+| vmbr3 | 192.168.13.0/24 | N3 |
+| vmbr4 | 192.168.14.0/24 | N4 |
+| vmbr6 | 192.168.16.0/24 | N6 |
 
 <a id="build"></a>
 
 ## Build eUPF on VM-UP
 
 Please refer to the following for building eUPF.
-- eUPF v0.6.4 (2024.05.03) - https://github.com/edgecomllc/eupf
+- eUPF v0.6.4 (2024.09.22) - https://github.com/edgecomllc/eupf
 
 <a id="install_packages"></a>
 
@@ -118,8 +96,8 @@ Please refer to the following for building eUPF.
 ### Install Golang and Setting
 
 ```
-# wget https://go.dev/dl/go1.22.3.linux-amd64.tar.gz
-# tar -C /usr/local -zxvf go1.22.3.linux-amd64.tar.gz
+# wget https://go.dev/dl/go1.22.8.linux-amd64.tar.gz
+# tar -C /usr/local -zxvf go1.22.8.linux-amd64.tar.gz
 # mkdir -p ~/go/{bin,pkg,src}
 # echo 'export GOPATH=$HOME/go' >> ~/.bashrc
 # echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
@@ -174,7 +152,7 @@ In that case, to see debug log from eBPF programs:
 ## Setup eUPF on VM-UP
 
 Please refer to the following for setup eUPF.
-- eUPF v0.6.4 (2024.05.03) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
+- eUPF v0.6.4 (2024.09.22) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
 
 First, uncomment the next line in the `/etc/sysctl.conf` file and reflect it in the OS.
 ```
@@ -183,10 +161,10 @@ net.ipv4.ip_forward=1
 ```
 # sysctl -p
 ```
-Next, down the default interface`enp0s3` of the VM-UP and set the VM-DN IP address to default GW on the N6 interface`enp0s16`.
+Next, down the default interface`ens18` of the VM-UP and set the VM-DN IP address to default GW on the N6 interface`ens22`.
 ```
-# ip link set dev enp0s3 down
-# ip route add default via 192.168.16.152 dev enp0s16
+# ip link set dev ens18 down
+# ip route add default via 192.168.16.152 dev ens22
 ```
 
 <a id="conf"></a>
@@ -198,15 +176,16 @@ Create `/root/eupf` directory and put the configuration file there.
 - `/root/eupf/config.yml`
 
 ```yaml
-interface_name: [enp0s9, enp0s16]
-xdp_attach_mode: generic
+interface_name: [ens20, ens22]
+xdp_attach_mode: native
 api_address: :8080
 pfcp_address: 192.168.14.151:8805
 pfcp_node_id: 192.168.14.151
+association_setup_timeout: 5
 metrics_address: :9090
 n3_address: 192.168.13.151
 gtp_peer:
-echo_interval: 10
+gtp_echo_interval: 10
 qer_map_size: 1024
 far_map_size: 1024
 pdr_map_size: 1024
@@ -231,12 +210,12 @@ For reference, a list of drivers that support XDP can be found [here](https://gi
 ```
 # cd /root/eupf
 # bin/eupf --config config.yml
-2024/05/17 23:43:50 Startup config: map[api_address::8080 echo_interval:10 far_map_size:1024 feature_ftup:true feature_ueip:true gtp_peer:[] heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[enp0s9 enp0s16] logging_level:info metrics_address::9090 n3_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 qer_map_size:1024 resize_ebpf_maps:false teid_pool:65536 ueip_pool:10.45.0.0/16 xdp_attach_mode:generic]
-2024/05/17 23:43:50 Apply eUPF config: {InterfaceName:[enp0s9 enp0s16] XDPAttachMode:generic ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 MetricsAddress::9090 N3Address:192.168.13.151 GtpPeer:[] EchoInterval:10 QerMapSize:1024 FarMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info UEIPPool:10.45.0.0/16 FTEIDPool:65536 FeatureUEIP:true FeatureFTUP:true}
-2024/05/17 23:43:50 INF Attached XDP program to iface "enp0s9" (index 2)
-2024/05/17 23:43:50 INF Attached XDP program to iface "enp0s16" (index 4)
-2024/05/17 23:43:50 INF Initialize resources: UEIP pool (CIDR: "10.45.0.0/16"), TEID pool (size: 65536)
-2024/05/17 23:43:50 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151 and N3 address: 192.168.13.151
+2024/10/14 05:19:48 Startup config: map[api_address::8080 association_setup_timeout:5 far_map_size:1024 feature_ftup:true feature_ueip:true gtp_echo_interval:10 gtp_peer:[] heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[ens20 ens22] logging_level:info metrics_address::9090 n3_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 pfcp_remote_node:[] qer_map_size:1024 resize_ebpf_maps:false teid_pool:65536 ueip_pool:10.45.0.0/16 urr_map_size:1024 xdp_attach_mode:native]
+2024/10/14 05:19:48 Apply eUPF config: {InterfaceName:[ens20 ens22] XDPAttachMode:native ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 PfcpRemoteNode:[] AssociationSetupTimeout:5 MetricsAddress::9090 N3Address:192.168.13.151 GtpPeer:[] GtpEchoInterval:10 QerMapSize:1024 FarMapSize:1024 UrrMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info UEIPPool:10.45.0.0/16 FTEIDPool:65536 FeatureUEIP:true FeatureFTUP:true}
+2024/10/14 05:19:48 INF Attached XDP program to iface "ens20" (index 4)
+2024/10/14 05:19:48 INF Attached XDP program to iface "ens22" (index 6)
+2024/10/14 05:19:48 INF Initialize resources: UEIP pool (CIDR: "10.45.0.0/16"), TEID pool (size: 65536)
+2024/10/14 05:19:48 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151 and N3 address: 192.168.13.151
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -266,20 +245,22 @@ For reference, a list of drivers that support XDP can be found [here](https://gi
  - using code:  gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] GET    /metrics                  --> github.com/edgecomllc/eupf/cmd/api/rest.(*ApiHandler).InitMetricsRoute.(*ApiHandler).InitMetricsRoute.func1.func2 (4 handlers)
-2024/05/17 23:43:50 INF running on :8080
-2024/05/17 23:43:50 INF running on :9090
+2024/10/14 05:19:48 INF running on :8080
+2024/10/14 05:19:48 INF running on :9090
 ```
-The link status of the network interfaces N3(enp0s9) and N6(enp0s16) is as follows.
+The link status of the network interfaces N3(ens20) and N6(ens22) is as follows.
 ```
 # ip link show
 ...
-2: enp0s9: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdpgeneric qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
-    link/ether 08:00:27:f8:d7:49 brd ff:ff:ff:ff:ff:ff
-    prog/xdp id 21 name upf_ip_entrypoi tag a9e9af5ef91160de jited 
+4: ens20: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdp qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether bc:24:11:74:fe:7b brd ff:ff:ff:ff:ff:ff
+    prog/xdp id 22 name upf_ip_entrypoi tag c0b871b0dadf1893 jited 
+    altname enp0s20
 ...
-4: enp0s16: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdpgeneric qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
-    link/ether 08:00:27:0e:da:7c brd ff:ff:ff:ff:ff:ff
-    prog/xdp id 21 name upf_ip_entrypoi tag a9e9af5ef91160de jited 
+6: ens22: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdp qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether bc:24:11:bf:d4:23 brd ff:ff:ff:ff:ff:ff
+    prog/xdp id 22 name upf_ip_entrypoi tag c0b871b0dadf1893 jited 
+    altname enp0s22
 ...
 ```
 
@@ -297,7 +278,7 @@ net.ipv4.ip_forward=1
 Next, configure NAPT and routing to N6 IP address of eUPF.
 ```
 # iptables -t nat -A POSTROUTING -s <DN> -j MASQUERADE
-# ip route add <DN> via 192.168.16.151 dev enp0s9
+# ip route add <DN> via 192.168.16.151 dev ens20
 ```
 **Note. Set `<DN>` according to the core network.  
 ex) `10.45.0.0/16`**
@@ -328,6 +309,7 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
+- [2024.10.14] Changed the VM environment from Virtualbox to Proxmox VE.
 - [2024.05.11] Changed the eUPF OS from Ubuntu 22.04 to 24.04.
 - [2024.05.04] Updated to `v0.6.4`.
 - [2024.02.11] Updated to `v0.6.1`.
