@@ -50,7 +50,7 @@ The eBPF/XDP UPF used is as follows.
 - eBPF/XDP UPF - eUPF v0.6.4 (2024.05.01) - https://github.com/edgecomllc/eupf
 
 Each VMs are as follows.  
-| VM | SW & Role | IP address | OS | CPU<br>(Min) | Memory<br>(Min) | HDD<br>(Min) |
+| VM | SW & Role | IP address | OS | CPU<br>(Min) | Mem<br>(Min) | HDD<br>(Min) |
 | --- | --- | --- | --- | --- | --- | --- |
 | VM-UP | eUPF U-Plane | 192.168.0.151/24 | Ubuntu 24.04 | 1 | 2GB | 20GB |
 | VM-DN | Data Network Gateway  | 192.168.0.152/24 | Ubuntu 24.04 | 1 | 1GB | 10GB |
