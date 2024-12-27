@@ -90,6 +90,10 @@ Please refer to the following for building eUPF.
 ```
 # apt install git clang llvm gcc-multilib libbpf-dev
 ```
+If you want to use `xdpdump` command, install `xdp-tools` package.
+```
+# apt install xdp-tools
+```
 
 <a id="install_golang"></a>
 
