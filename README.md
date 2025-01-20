@@ -317,6 +317,7 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
+- [2025.01.20] Added the description that enabling kernel logging for debugging significantly reduces eUPF performance.
 - [2024.12.28] Updated to `v0.6.4 (2024.12.23)`.
 - [2024.12.22] Updated to `v0.6.4 (2024.12.18)`.
 - [2024.11.17] Updated to `v0.6.4 (2024.11.16)`.
