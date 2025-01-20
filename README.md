@@ -142,7 +142,7 @@ In that case, to see debug log from eBPF programs:
 ```
 # cat /sys/kernel/debug/tracing/trace_pipe
 ```
-**Note. If outputting kernel logs for debugging, eUPF performance will decrease significantly, so it is usually recommended to build a binary that does not output kernel logs.**
+**Note. If outputting kernel logs for debugging, eUPF performance will decrease significantly. So it is usually recommended to build a binary that does not output kernel logs.**
 
 <a id="build_1"></a>
 
