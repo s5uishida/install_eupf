@@ -47,7 +47,7 @@ The built simulation environment is as follows.
 <img src="./images/network-overview.png" title="./images/network-overview.png" width=800px></img>
 
 The eBPF/XDP UPF used is as follows.
-- eBPF/XDP UPF - eUPF v0.7.0 (2025.03.04) - https://github.com/edgecomllc/eupf
+- eBPF/XDP UPF - eUPF v0.7.1 (2025.04.16) - https://github.com/edgecomllc/eupf
 
 Each VMs are as follows.  
 | VM | SW & Role | IP address | OS | CPU<br>(Min) | Mem<br>(Min) | HDD<br>(Min) |
@@ -81,7 +81,7 @@ Linux Bridges of Proxmox VE are as follows.
 ## Build eUPF on VM-UP
 
 Please refer to the following for building eUPF.
-- eUPF v0.7.0 (2025.03.04) - https://github.com/edgecomllc/eupf
+- eUPF v0.7.1 (2025.04.16) - https://github.com/edgecomllc/eupf
 
 <a id="install_packages"></a>
 
@@ -100,8 +100,8 @@ If you want to use `xdpdump` command, install `xdp-tools` package.
 ### Install Golang and Setting
 
 ```
-# wget https://go.dev/dl/go1.23.4.linux-amd64.tar.gz
-# tar -C /usr/local -zxvf go1.23.4.linux-amd64.tar.gz
+# wget https://go.dev/dl/go1.24.2.linux-amd64.tar.gz
+# tar -C /usr/local -zxvf go1.24.2.linux-amd64.tar.gz
 # mkdir -p ~/go/{bin,pkg,src}
 # echo 'export GOPATH=$HOME/go' >> ~/.bashrc
 # echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
@@ -157,7 +157,7 @@ In that case, to see debug log from eBPF programs:
 ## Setup eUPF on VM-UP
 
 Please refer to the following for setup eUPF.
-- eUPF v0.7.0 (2025.03.04) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
+- eUPF v0.7.1 (2025.04.16) - https://github.com/edgecomllc/eupf/blob/main/docs/Configuration.md
 
 First, uncomment the next line in the `/etc/sysctl.conf` file and reflect it in the OS.
 ```
@@ -218,12 +218,12 @@ For reference, a list of drivers that support XDP can be found [here](https://gi
 ```
 # cd /root/eupf
 # bin/eupf --config config.yml
-2025/03/16 14:43:39 Startup config: map[api_address::8080 association_setup_timeout:5 far_map_size:1024 feature_ftup:true feature_ueip:true gtp_echo_interval:10 gtp_peer:[] heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[ens20 ens22] logging_level:info metrics_address::9090 n3_address:192.168.13.151 n9_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 pfcp_remote_node:192.168.14.111 qer_map_size:1024 resize_ebpf_maps:false teid_pool:65535 ueip_pool:10.45.0.0/16 urr_map_size:1024 xdp_attach_mode:native]
-2025/03/16 14:43:39 Apply eUPF config: {InterfaceName:[ens20 ens22] XDPAttachMode:native ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 PfcpRemoteNode:[192.168.14.111] AssociationSetupTimeout:5 MetricsAddress::9090 N3Address:192.168.13.151 N9Address:192.168.13.151 GtpPeer:[] GtpEchoInterval:10 QerMapSize:1024 FarMapSize:1024 UrrMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info UEIPPool:10.45.0.0/16 FTEIDPool:65535 FeatureUEIP:true FeatureFTUP:true}
-2025/03/16 14:43:39 INF Attached XDP program to iface "ens20" (index 4)
-2025/03/16 14:43:39 INF Attached XDP program to iface "ens22" (index 6)
-2025/03/16 14:43:39 INF Initialize resources: UEIP pool (CIDR: "10.45.0.0/16"), TEID pool (size: 65535)
-2025/03/16 14:43:39 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151, N3 address: 192.168.13.151, N9 address: 192.168.13.151
+2025/04/19 13:50:43 Startup config: map[api_address::8080 association_setup_timeout:5 far_map_size:1024 feature_ftup:true feature_ueip:true gtp_echo_interval:10 gtp_peer:[] heartbeat_interval:5 heartbeat_retries:3 heartbeat_timeout:5 interface_name:[ens20 ens22] logging_level:info metrics_address::9090 n3_address:192.168.13.151 n9_address:192.168.13.151 pdr_map_size:1024 pfcp_address:192.168.14.151:8805 pfcp_node_id:192.168.14.151 pfcp_remote_node:192.168.14.111 qer_map_size:1024 resize_ebpf_maps:false teid_pool:65535 ueip_pool:10.45.0.0/16 urr_map_size:1024 xdp_attach_mode:native]
+2025/04/19 13:50:43 Apply eUPF config: {InterfaceName:[ens20 ens22] XDPAttachMode:native ApiAddress::8080 PfcpAddress:192.168.14.151:8805 PfcpNodeId:192.168.14.151 PfcpRemoteNode:[192.168.14.111] AssociationSetupTimeout:5 MetricsAddress::9090 N3Address:192.168.13.151 N9Address:192.168.13.151 GtpPeer:[] GtpEchoInterval:10 QerMapSize:1024 FarMapSize:1024 UrrMapSize:1024 PdrMapSize:1024 EbpfMapResize:false HeartbeatRetries:3 HeartbeatInterval:5 HeartbeatTimeout:5 LoggingLevel:info UEIPPool:10.45.0.0/16 FTEIDPool:65535 FeatureUEIP:true FeatureFTUP:true}
+2025/04/19 13:50:43 INF Attached XDP program to iface "ens20" (index 4)
+2025/04/19 13:50:43 INF Attached XDP program to iface "ens22" (index 6)
+2025/04/19 13:50:43 INF Initialize resources: UEIP pool (CIDR: "10.45.0.0/16"), TEID pool (size: 65535)
+2025/04/19 13:50:43 INF Starting PFCP connection: 192.168.14.151:8805 with Node ID: 192.168.14.151, N3 address: 192.168.13.151, N9 address: 192.168.13.151
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -253,8 +253,8 @@ For reference, a list of drivers that support XDP can be found [here](https://gi
  - using code:  gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] GET    /metrics                  --> github.com/edgecomllc/eupf/cmd/api/rest.(*ApiHandler).InitMetricsRoute.(*ApiHandler).InitMetricsRoute.func1.func2 (4 handlers)
-2025/03/16 14:43:39 INF running on :8080
-2025/03/16 14:43:39 INF running on :9090
+2025/04/19 13:50:43 INF running on :8080
+2025/04/19 13:50:43 INF running on :9090
 ```
 The link status of the network interfaces N3(ens20) and N6(ens22) is as follows.
 ```
@@ -262,12 +262,12 @@ The link status of the network interfaces N3(ens20) and N6(ens22) is as follows.
 ...
 4: ens20: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdp qdisc fq_codel state UP mode DEFAULT group default qlen 1000
     link/ether bc:24:11:74:fe:7b brd ff:ff:ff:ff:ff:ff
-    prog/xdp id 30 name upf_ip_entrypoi tag 459abcee941af363 jited 
+    prog/xdp id 27 name upf_ip_entrypoi tag 46e85ca105ec04fb jited 
     altname enp0s20
 ...
 6: ens22: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 xdp qdisc fq_codel state UP mode DEFAULT group default qlen 1000
     link/ether bc:24:11:bf:d4:23 brd ff:ff:ff:ff:ff:ff
-    prog/xdp id 30 name upf_ip_entrypoi tag 459abcee941af363 jited 
+    prog/xdp id 27 name upf_ip_entrypoi tag 46e85ca105ec04fb jited 
     altname enp0s22
 ...
 ```
@@ -317,6 +317,7 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
+- [2025.04.19] Updated to `v0.7.1 (2025.04.16)`.
 - [2025.03.16] Updated to `v0.7.0 (2025.03.04)`.
 - [2025.01.20] Added the description that enabling kernel logging for debugging significantly reduces eUPF performance.
 - [2024.12.28] Updated to `v0.6.4 (2024.12.23)`.
