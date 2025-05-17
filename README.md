@@ -299,7 +299,7 @@ ex) `10.45.0.0/16`**
 There are two ways to do this.
 
 1. [How to run `xdpdump`](https://github.com/xdp-project/xdp-tools/tree/main/xdp-dump)
-2. [How to run `tcpdump` on another VM by configuring a bridge interface linked to a network interface for XDP](https://github.com/s5uishida/proxmox_ve_tips#enable_promisc)
+2. [How to run `tcpdump` or `tshark` on another VM by configuring a bridge interface linked to a network interface for XDP](https://github.com/s5uishida/proxmox_ve_tips#enable_promisc)
 
 ---
 With the above steps, eUPF(eBPF/XDP UPF) has been constructed.
