@@ -348,7 +348,7 @@ I would like to thank the excellent developers and all the contributors of eUPF.
 
 ## Changelog (summary)
 
-- [2026.01.31] Added the description to make GTP-U/UDP/IP(6) to be also recognized as a value for Outer Header Removal Description.
+- [2026.01.31] Added the description to make `GTP-U/UDP/IP(6)` to be also recognized as a value for `Outer Header Removal Description`.
 - [2025.06.16] Updated to `v0.7.1 (2025.06.16)`.
 - [2025.06.08] Updated to `v0.7.1 (2025.06.04)`.
 - [2025.04.19] Updated to `v0.7.1 (2025.04.16)`.
