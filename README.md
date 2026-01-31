@@ -133,7 +133,7 @@ If you want to use `xdpdump` command, install `xdp-tools` package.
 
 ### Apply the patches
 
-Make GTP-U/UDP/IP(6) to be also recognized as a value for Outer Header Removal Description.
+Make `GTP-U/UDP/IP(6)` to be also recognized as a value for `Outer Header Removal Description`.
 ```
 3GPP TS 29.244 - Table 8.2.64-1: Outer Header Removal Description
   GTP-U/UDP/IP (NOTE 4) 6
