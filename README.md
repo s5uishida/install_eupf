@@ -19,7 +19,7 @@ There are installation instructions in the eUPF repository, but I would like to 
   - [Install Golang and Setting](#install_golang)
   - [Install the Swag command line tool for Golang](#install_swag)
   - [Clone eUPF](#clone)
-  - [Make GTP-U/UDP/IP(6) to be also recognized as a value for Outer Header Removal Description](#patch)
+  - [Apply the patches](#patch)
   - [Run the code generators](#generate_codes)
   - [Build eUPF](#build_1)
 - [Setup eUPF on VM-UP](#setup_up)
@@ -131,15 +131,16 @@ If you want to use `xdpdump` command, install `xdp-tools` package.
 
 <a id="patch"></a>
 
-### Make GTP-U/UDP/IP(6) to be also recognized as a value for Outer Header Removal Description
+### Apply the patches
 
+Make GTP-U/UDP/IP(6) to be also recognized as a value for Outer Header Removal Description.
 ```
 3GPP TS 29.244 - Table 8.2.64-1: Outer Header Removal Description
   GTP-U/UDP/IP (NOTE 4) 6
   NOTE 4: The CP function shall use this value to instruct UP function to remove the GTP-U/UDP/IP
           header regardless it is IPv4 or IPv6.
 ```
-Get and apply [the pull request](https://github.com/edgecomllc/eupf/pull/636) for eUPF as follows.
+For this purpose, get and apply [the pull request](https://github.com/edgecomllc/eupf/pull/636) for eUPF as follows.
 ```
 # cd ~
 # wget https://github.com/edgecomllc/eupf/pull/636.diff -O 636.patch
